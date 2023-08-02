@@ -1,6 +1,8 @@
+import 'dotenv/config';
+const { privateKey } = JSON.parse(process.env.PRIVATE_KEY);
+
 export default {
-  "project_id": "donation-application-d98e5",
-  "private_key_id": "38afb391fc480a071a87d98b763270232207da38",
-  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQC13B5eRTmmqEvh\nFaPbQl/fpkVm5VwcZcq1VjYw9dQIy3NKb7XSWUH3S3Jc7+WrGO7Bg8T7t+TddwB1\ndXYXZrQecedir4SVJT2tziJDkhrAV5cqaX6XS1IFLifTexpOJS4XUkAS64Hbk98V\niNBPm9scOMRtco9wX8Q0e2meLMoLQGGypUBKS+e88IW3h5mBuIqg0fa/8EUR0Bpv\nlmsbybHRnuFqnbT8cECdCcaXD5SiLuT4RoYc5HlWXwVXsH/WUZWtdqpL/aZm08za\nADN8m8DuZXPo5ZKUZU+EcMwdY7MKMEmNphuEhJtZvQjYg4cNjcghjS1Vkq3o5OXO\nLk1ldByvAgMBAAECggEAKpaLSBFXEGe+KU5rinfPQu1JuHCC8yWFZJT1aN7Q0mRu\nseJaRpHfiF2TQR9u/fP/SbMliLtGbfSl11v0FUPYb37GLI6k8lZ/zLmGvaMz/5Ij\nlOuSmTSq1wq5ieV8wgsj8ZMx7RxY00acSgs5mUMK+19x5J2c6LiMlqvGDqQ3ho2e\niJdenrCo+IrmZ+bJOOzLSbMbVfazkAMZDioFVU9fyPv5lEBEBURPE4fvksiPYtL1\niXQDCh1n3hUhUMVHHuqGZA9bm72V/sxZ56/pqPhnL4o8I8FG1/mN64ezG+u5+HnD\nSMI2OAB2Vda9vzSnNcW5hyynk/G+qcROVXpCX9g0SQKBgQDh/abukgQup6RfI5BA\n8zhv9kV6lp4Mv6U7WhqqQcO8fmSRRrW+HOIvCmPHkQPudpW+lBHPwG3Epz86wBC0\nWuNARkZAzgU1vPyMw24MrSWu3I/IV9rsJmsW5sTtnE6KpyCSIDN+t+fzB/TPrKjn\nP+hnjOhMb5Rt2cp88r1voSJlaQKBgQDOAkZMnVynbHy7lf1ZR1m+kPzxTjm/6Tzc\nJNHSy0hnB0DXoU1q2bYct8lqOU9cFkIqMiw2wVafJElG3r0lQqQDixsZqsl7NRCk\nxx4cFkJq6NpFW8qUZOFLVot5S3vCfgmshtGD3fkaI/GMFNH8OtG7vWYwoNkiiOcd\nvcgoDPO2VwKBgFWmEow8XsVn184O5m8XPv5/8ZkiWEgwoei6n3yDbDGWHXtJtzuU\nKsz1PRe3iCvqWZpe99kq7u8nC7mybSJNh+8mMx4Ads0FERowPxci0DNTeFLPqTLy\n5IdLcrszEDlQWfHHrnyKKqhbDZdfsqvh9qy4JJpDd5eigTGVteIGychxAoGAUy8J\n8d/MzPH6f8h1z3oHG/LxoAJlQT/Nylq3uvVInAmKvkcsuouEhJ4Vn2XazKVUPDOc\nNNPmxUXirNI97/Czx5aA7+FNkAmCWfbpCpBWa1Lw5/bDmx4M9t3QXb8EDynTgC3E\nJgoYjtyaqWSy0bVygOteex5H7zD2mcTLMJjiQ+sCgYBzP9mx4yxd/9SlIvX+juIg\n7tRYS0W34OhxwA6bkm/KJ8yipoXdIyL7dqL9bb7KKwfv85Qf5oD8UnIjeHwVJ9fe\ncj3DPGxhssU0Yp+z1yzPLA4s3ZhktsHorfvJbWdpLrSRzSfJ1IKFy9jtP2DCx6Zj\nQAhJ/J+DcCc3k1AmnAvh0A==\n-----END PRIVATE KEY-----\n",
-  "client_email": "firebase-adminsdk-3g922@donation-application-d98e5.iam.gserviceaccount.com"  
-}
+  project_id: process.env.PROJECT_ID,
+  private_key: privateKey,
+  client_email: process.env.CLIENT_EMAIL,
+};
