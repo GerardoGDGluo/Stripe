@@ -1,11 +1,21 @@
+import 'dotenv/config';
 import bodyParser from 'body-parser';
 import express from 'express';
 import Stripe from 'stripe';
+import serviceAccountKey from './serviceAccountKey.js';
+import admin from 'firebase-admin';
+import { getAuth } from 'firebase-admin/auth';
+import ejs from 'ejs';
+import sendVerificationEmail from './sendEmail.js';
 
 const stripePublishableKey =
   'pk_test_51NTFUuBRRUJORUqEnIFo2g4995iyR7fjulKjqrb37xnH5d7XmjmPB0m5MpbyfiK9oXZHc9eL6obRSz0hyfQW7tQF00hgajqNNB';
 const stripeSecretKey =
   'sk_test_51NTFUuBRRUJORUqEVInQYdhMWUWSUFZAoIkms1XQYDJunbBK70YRz2i0yal8LjKIq4RY8l1kzEZpD7BL6mbAaRyi00g0yxYj9c';
+
+const adminApp = admin.initializeApp({
+  credential: admin.credential.cert(serviceAccountKey),
+});
 
 const app = express();
 
@@ -190,6 +200,43 @@ app.post('/payment-sheet-setup-intent-subscription', async (req, res) => {
     }
   } catch (error) {
     console.log(error);
+  }
+});
+
+app.post('/send-custom-verification-email', async (req, res) => {
+  const { userEmail, redirectUrl } = req.body;
+  const emailValidate = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+
+  if (!userEmail?.match(emailValidate)) {
+    return res.status(401).json({ message: 'Invalid email' });
+  } else if (!redirectUrl || typeof redirectUrl !== 'string') {
+    return res.status(401).json({ message: 'Invalid redirectUrl' });
+  }
+
+  const actionCodeSettings = {
+    url: redirectUrl,
+  };
+
+  try {
+    const actionLink = await getAuth().generateEmailVerificationLink(
+      userEmail,
+      actionCodeSettings
+    );
+    const template = await ejs.renderFile('views/verify-email.ejs', {
+      actionLink,
+      randomNumber: Math.random(),
+    });
+    await sendVerificationEmail(userEmail, template, actionLink);
+    res.status(200).json({ message: 'Email successfully sent' });
+  } catch (error) {
+    const message = error.message;
+    if (error.code === 'auth/user-not-found') {
+      return res.status(404).json({ message });
+    }
+    if (error.code === 'auth/invalid-continue-uri') {
+      return res.status(401).json({ message });
+    }
+    res.status(500).json({ message });
   }
 });
 
