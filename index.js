@@ -8,10 +8,8 @@ import { getAuth } from 'firebase-admin/auth';
 import ejs from 'ejs';
 import sendVerificationEmail from './sendEmail.js';
 
-const stripePublishableKey =
-  'pk_test_51NTFUuBRRUJORUqEnIFo2g4995iyR7fjulKjqrb37xnH5d7XmjmPB0m5MpbyfiK9oXZHc9eL6obRSz0hyfQW7tQF00hgajqNNB';
-const stripeSecretKey =
-  'sk_test_51NTFUuBRRUJORUqEVInQYdhMWUWSUFZAoIkms1XQYDJunbBK70YRz2i0yal8LjKIq4RY8l1kzEZpD7BL6mbAaRyi00g0yxYj9c';
+const stripePublishableKey = 'ENVVariable';
+const stripeSecretKey = 'ENVariable';
 
 const adminApp = admin.initializeApp({
   credential: admin.credential.cert(serviceAccountKey),
