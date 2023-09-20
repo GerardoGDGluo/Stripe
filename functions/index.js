@@ -25,6 +25,46 @@ const adminApp = admin.initializeApp({
   credential: admin.credential.cert(serviceAccountKey),
 });
 
+function sumValues(obj) {
+  let sum = 0;
+  for (const key in obj) {
+    const value = Number(obj[key]);
+    sum += value;
+  }
+  return sum;
+}
+
+function splitObject(original) {
+  const datosFacturacion = [
+    'cfdi',
+    'cp',
+    'razon',
+    'regimen',
+    'rfc',
+    'tipoDeEntidad',
+  ];
+  const facturacion = {};
+  const amounts = {};
+
+  for (const prop of datosFacturacion) {
+    if (original[prop] !== undefined) {
+      facturacion[prop] = original[prop];
+    }
+  }
+
+  for (const key in original) {
+    if (
+      original.hasOwnProperty(key) &&
+      !datosFacturacion.includes(key) &&
+      original[key] !== undefined
+    ) {
+      amounts[key] = original[key];
+    }
+  }
+
+  return [facturacion, amounts];
+}
+
 const app = express();
 
 app.use((req, res, next) => {
@@ -63,9 +103,19 @@ app.post('/create-payment-intent', async (req, res) => {
 });
 
 app.post('/payment-sheet', async (req, res) => {
-  const { email = 'gerardo@mail.com' } = req.body;
+  const {
+    email = 'gerardo@mail.com',
+    amount = 250,
+    withFacturacion = true,
+    values = {},
+  } = req.body;
 
-  console.log(email);
+  console.log({ email, amount, withFacturacion, values });
+
+  const [facturacion, amounts] = splitObject(values);
+  const total = sumValues(amounts);
+
+  console.log({ facturacion, amounts, total });
 
   const stripe = new Stripe(stripeSecretKey, {
     apiVersion: '2020-08-27',
@@ -89,13 +139,12 @@ app.post('/payment-sheet', async (req, res) => {
       { apiVersion: '2020-08-27' }
     );
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: 1000,
-      currency: 'usd',
+      amount: amount * 100,
+      currency: 'mxn',
       customer: customer.id,
-      payment_method_types: ['card', 'link'],
+      payment_method_types: ['card'],
     });
 
-    // console.log(customer);
     return res.json({
       paymentIntent: paymentIntent.client_secret,
       ephemeralKey: ephemeralKey.secret,
